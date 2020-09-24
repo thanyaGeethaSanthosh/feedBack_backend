@@ -11,11 +11,9 @@ const getUserData = async function (req, res) {
   const { users, sessionHandler } = req.app.locals;
   const { sesID } = req.cookies;
   const userName = await sessionHandler.getSession(sesID);
-  console.log(userName);
   users
     .getUserProfile(userName)
     .then((userProfile) => {
-      console.log(userProfile);
       res.json({ user: userProfile, loggedIn: true });
     })
     .catch(() => {
