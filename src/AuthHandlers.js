@@ -39,7 +39,12 @@ const authenticateUser = async function (req, res, next) {
 const createSessionAndRedirect = async function (res, dataStore, userID) {
   const sesID = await dataStore.createSession(userID);
   res.cookie('sesID', sesID);
-  res.redirect('/');
+  res.redirect(
+    generateUrl({
+      url: 'http://localhost:3000',
+      path: '/',
+    })
+  );
 };
 
 const redirectAuthenticated = async function (req, res, next) {
@@ -63,12 +68,12 @@ const takeToSignUp = async function (req, res) {
     avatarURL,
   });
   res.cookie('regT', registrationToken);
-  res.send(`<form action="/signUp" method="POST">
-    <div >Sign up</div>
-    <div ><label for="userID">Username</label><input id="userName" type="text" name="userID" required="required" /></div>
-    <div><label for="displayName">Display Name</label><input id="displayName" type="text" name="fullName" required="required" /></div>
-    <div ><input class="inactive" id="submitBtn" type="submit" value="sign up" /></div>
-</form>`);
+  res.redirect(
+    generateUrl({
+      url: 'http://localhost:3000',
+      path: '/signUp',
+    })
+  );
 };
 
 const registerUser = async function (req, res, next) {
@@ -92,14 +97,11 @@ const registerUser = async function (req, res, next) {
 };
 
 const finishRegistration = async function (req, res) {
-  console.log('called me');
   const { sessionHandler } = req.app.locals;
-  const { userID } = req.body;
-
+  const { userName } = req.body;
   await sessionHandler.deleteTempToken(req.cookies.regT);
   res.clearCookie('regT');
-
-  createSessionAndRedirect(res, sessionHandler, userID);
+  createSessionAndRedirect(res, sessionHandler, userName);
 };
 
 module.exports = {

@@ -1,12 +1,5 @@
 const statusCodes = require('./statusCodes.json');
 
-const logRequest = function (req, res, next) {
-  if (!process.env.NO_LOG) {
-    process.stdout.write(`${req.method} ${req.url}\n`);
-  }
-  next();
-};
-
 const attachUserIfSignedIn = async function (req, res, next) {
   const { users, sessionHandler } = req.app.locals;
   req.user = { isSignedIn: false };
@@ -44,7 +37,6 @@ const handleUnprocessableEntity = function (error, req, res, next) {
 };
 
 module.exports = {
-  logRequest,
   attachUserIfSignedIn,
   authorizeUser,
   closeSession,

@@ -14,7 +14,7 @@ class DataStore {
   }
 
   createUserAccount(accountInfo) {
-    const { userID, githubID, avatarURL, fullName } = accountInfo;
+    const { userName, githubID, avatarURL, fullName } = accountInfo;
     const query = `
     INSERT INTO users(id, github_id, avatar_url, full_name) 
     VALUES (?,?,?,?);
@@ -23,7 +23,7 @@ class DataStore {
     return new Promise((resolve, reject) => {
       this.dbClient.run(
         query,
-        [userID, githubID, avatarURL, fullName],
+        [userName, githubID, avatarURL, fullName],
         (err) => {
           if (err) {
             reject();

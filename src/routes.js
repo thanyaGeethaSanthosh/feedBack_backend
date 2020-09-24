@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('morgan');
 const redis = require('redis');
 const Sqlite3 = require('sqlite3').verbose();
 const cookieParser = require('cookie-parser');
@@ -18,7 +19,6 @@ const {
 } = process.env;
 
 const {
-  logRequest,
   attachUserIfSignedIn,
   authorizeUser,
   closeSession,
@@ -34,7 +34,11 @@ const {
   finishRegistration,
 } = require('./authHandlers');
 
-const { serveHomepage } = require('./publicHandlers');
+const {
+  serveHomepage,
+  getUserData,
+  getOtherUserData,
+} = require('./publicHandlers');
 
 const app = express();
 
@@ -59,14 +63,14 @@ const dataStore = new DataStore(dbClient);
 app.locals.dbClientReference = dbClient;
 app.locals.users = new Users(dataStore);
 
-app.use(logRequest);
+app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-app.get('/authenticate', redirectToGithub);
+app.get('/api/authenticate', redirectToGithub);
 app.get(
   '/gitOauth/authCode',
   authenticateUser,
@@ -76,10 +80,12 @@ app.get(
 
 app.get('/signOut', closeSession);
 
-app.post('/signUp', registerUser, finishRegistration);
+app.post('/api/signUp', registerUser, finishRegistration);
 
 app.get('/', serveHomepage);
+app.get('/api/getUserData', getUserData);
 app.use(attachUserIfSignedIn);
+app.get('/api/user/:userName', getOtherUserData);
 
 app.use(authorizeUser);
 

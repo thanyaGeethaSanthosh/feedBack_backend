@@ -14,11 +14,10 @@ class Users {
   }
 
   registerUser(userInfo) {
-    const { fullName, userID } = userInfo;
+    const { fullName, userName } = userInfo;
 
     userInfo.fullName = fullName || 'Anonymous';
-
-    return validateUserID(userID)
+    return validateUserID(userName)
       ? this.db.createUserAccount(userInfo)
       : Promise.reject();
   }

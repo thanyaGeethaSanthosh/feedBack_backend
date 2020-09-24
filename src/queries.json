@@ -1,5 +1,5 @@
 {
   "findAccount": "SELECT id as userID FROM users WHERE github_id=?;",
   "userInfo": "SELECT id, full_name, avatar_url FROM users WHERE id=?;",
-  "userProfile": "SELECT id AS profileID, full_name AS profileName, avatar_url AS profileAvatar, bio FROM users WHERE id = ?;"
+  "userProfile": "SELECT id AS userID, full_name AS fullName, avatar_url AS src FROM users WHERE id = ?;"
 }
