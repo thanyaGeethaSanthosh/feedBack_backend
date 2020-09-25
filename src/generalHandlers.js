@@ -24,8 +24,8 @@ const authorizeUser = function (req, res, next) {
 
 const closeSession = async function (req, res) {
   const { sesID } = req.cookies;
-  const { SessionHandler } = req.app.locals;
-  await SessionHandler.deleteSession(sesID);
+  const { sessionHandler } = req.app.locals;
+  sesID && (await sessionHandler.deleteSession(sesID));
   res.clearCookie('sesID');
   res.redirect('/');
 };

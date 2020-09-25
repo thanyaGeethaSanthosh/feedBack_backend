@@ -78,12 +78,11 @@ app.get(
   takeToSignUp
 );
 
-app.get('/signOut', closeSession);
-
 app.post('/api/signUp', registerUser, finishRegistration);
 
 app.get('/', serveHomepage);
 app.get('/api/getUserData', getUserData);
+app.get('/api/logout', closeSession);
 app.use(attachUserIfSignedIn);
 app.get('/api/user/:userName', getOtherUserData);
 
