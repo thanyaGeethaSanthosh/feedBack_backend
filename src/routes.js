@@ -8,6 +8,7 @@ const { Authenticator } = require('./Authenticator');
 const { DataStore } = require('./DataStore');
 const { SessionHandler } = require('./SessionHandler');
 const { Users } = require('./Users');
+const { FeedBacks } = require('./FeedBacks');
 
 const {
   NO_LOG,
@@ -38,6 +39,9 @@ const {
   serveHomepage,
   getUserData,
   getOtherUserData,
+  addFeedBack,
+  getSentFeedBacks,
+  getReceivedFeedBacks,
 } = require('./publicHandlers');
 
 const app = express();
@@ -62,6 +66,7 @@ const dbClient = new Sqlite3.Database(DB_PATH || ':memory:');
 const dataStore = new DataStore(dbClient);
 app.locals.dbClientReference = dbClient;
 app.locals.users = new Users(dataStore);
+app.locals.feedbacks = new FeedBacks(dataStore);
 
 app.use(logger('dev'));
 app.use(cookieParser());
@@ -85,6 +90,9 @@ app.get('/api/logout', closeSession);
 app.get('/api/getUserData', getUserData);
 app.use(attachUserIfSignedIn);
 app.get('/api/user/:userName', getOtherUserData);
+app.post('/api/addFeedBack', addFeedBack);
+app.get('/api/getSentFeedBacks', getSentFeedBacks);
+app.get('/api/getReceivedFeedBacks', getReceivedFeedBacks);
 
 app.use(authorizeUser);
 

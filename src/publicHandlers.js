@@ -35,8 +35,50 @@ const getOtherUserData = async function (req, res) {
     });
 };
 
+const addFeedBack = async function (req, res) {
+  const { feedbacks } = req.app.locals;
+  const { userID } = req.user;
+  feedbacks
+    .addFeedBack(userID, req.body)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ added: false, error: 'some error in adding feedBack' });
+    });
+};
+
+const getSentFeedBacks = async function (req, res) {
+  const { feedbacks } = req.app.locals;
+  const { userID } = req.user;
+  feedbacks
+    .getSentFeedBacks(userID)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ error: 'some error in getting feedBacks' });
+    });
+};
+
+const getReceivedFeedBacks = async function (req, res) {
+  const { feedbacks } = req.app.locals;
+  const { userID } = req.user;
+  feedbacks
+    .getReceivedFeedBacks(userID)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ error: 'some error in getting feedBacks' });
+    });
+};
+
 module.exports = {
   serveHomepage,
   getUserData,
   getOtherUserData,
+  addFeedBack,
+  getSentFeedBacks,
+  getReceivedFeedBacks,
 };
