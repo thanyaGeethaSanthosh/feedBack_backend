@@ -30,7 +30,11 @@ class Users {
   }
 
   getUser(userID) {
-    return this.db.getUserInfo(userID).then((user) => Promise.resolve(user));
+    return this.db
+      .getUserInfo(userID)
+      .then(({ id, full_name, avatar_url }) =>
+        Promise.resolve({ userID: id, fullName: full_name, src: avatar_url })
+      );
   }
 
   async getUserProfile(userID) {

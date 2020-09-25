@@ -81,8 +81,8 @@ app.get(
 app.post('/api/signUp', registerUser, finishRegistration);
 
 app.get('/', serveHomepage);
-app.get('/api/getUserData', getUserData);
 app.get('/api/logout', closeSession);
+app.get('/api/getUserData', getUserData);
 app.use(attachUserIfSignedIn);
 app.get('/api/user/:userName', getOtherUserData);
 

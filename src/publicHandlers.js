@@ -24,13 +24,14 @@ const getUserData = async function (req, res) {
 const getOtherUserData = async function (req, res) {
   const { users } = req.app.locals;
   const { userName } = req.params;
+  const { user } = req;
   users
-    .getUserProfile(userName)
+    .getUser(userName)
     .then((userProfile) => {
-      res.send({ user: userProfile, loggedIn: true });
+      res.json({ otherUser: userProfile, user: user, loggedIn: true });
     })
     .catch(() => {
-      res.sendStatus(statusCodes.notFound);
+      res.json({ loggedIn: false });
     });
 };
 
