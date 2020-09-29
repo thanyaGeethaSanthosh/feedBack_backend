@@ -74,6 +74,35 @@ const getReceivedFeedBacks = async function (req, res) {
     });
 };
 
+const getGroupMembers = async function (req, res) {
+  const { groups } = req.app.locals;
+  //have to remove self from group
+  const { userID } = req.user;
+  const { groupID } = req.params;
+  groups
+    .getMembersOf(groupID)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ error: 'some error in getting feedBacks' });
+    });
+};
+
+const getGroupsOf = async function (req, res) {
+  const { groups } = req.app.locals;
+  //have to remove self from group
+  const { userID } = req.user;
+  groups
+    .getGroupsOf(userID)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ error: 'some error in getting feedBacks' });
+    });
+};
+
 module.exports = {
   serveHomepage,
   getUserData,
@@ -81,4 +110,6 @@ module.exports = {
   addFeedBack,
   getSentFeedBacks,
   getReceivedFeedBacks,
+  getGroupMembers,
+  getGroupsOf,
 };

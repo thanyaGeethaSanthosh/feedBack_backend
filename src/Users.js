@@ -37,6 +37,13 @@ class Users {
       );
   }
 
+  getUserList(userIDList) {
+    return this.db.getUsersList().then((usersList) => {
+      const users = usersList.filter((user) => userIDList.includes(user.id));
+      return Promise.resolve(users);
+    });
+  }
+
   async getUserProfile(userID) {
     const profileInfo = await this.db.getProfileData(userID);
 

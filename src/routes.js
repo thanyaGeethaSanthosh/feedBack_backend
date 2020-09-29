@@ -9,6 +9,7 @@ const { DataStore } = require('./DataStore');
 const { SessionHandler } = require('./SessionHandler');
 const { Users } = require('./Users');
 const { FeedBacks } = require('./FeedBacks');
+const { Groups } = require('./Groups');
 
 const {
   NO_LOG,
@@ -42,6 +43,8 @@ const {
   addFeedBack,
   getSentFeedBacks,
   getReceivedFeedBacks,
+  getGroupMembers,
+  getGroupsOf,
 } = require('./publicHandlers');
 
 const app = express();
@@ -67,6 +70,7 @@ const dataStore = new DataStore(dbClient);
 app.locals.dbClientReference = dbClient;
 app.locals.users = new Users(dataStore);
 app.locals.feedbacks = new FeedBacks(dataStore);
+app.locals.groups = new Groups(dataStore);
 
 app.use(logger('dev'));
 app.use(cookieParser());
@@ -93,6 +97,8 @@ app.get('/api/user/:userName', getOtherUserData);
 app.post('/api/addFeedBack', addFeedBack);
 app.get('/api/getSentFeedBacks', getSentFeedBacks);
 app.get('/api/getReceivedFeedBacks', getReceivedFeedBacks);
+app.get('/api/getGroupMembers/:groupName', getGroupMembers);
+app.get('/api/getGroupsOf', getGroupsOf);
 
 app.use(authorizeUser);
 
