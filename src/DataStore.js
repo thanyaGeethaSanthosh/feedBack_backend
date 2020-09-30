@@ -50,6 +50,26 @@ class DataStore {
       .then((rows) => Promise.resolve(rows));
     return row;
   }
+
+  async getGroupsOf(userID) {
+    const row = await this.dbClient
+      .from('groups')
+      .select({ groupName: 'group_name' })
+      .where('member_names', 'like', `%${userID}%`);
+    return row;
+  }
+
+  async getMembersOf(groupName) {
+    const [{ names, groupID }] = await this.dbClient
+      .from('groups')
+      .select({ names: 'member_names', groupID: 'group_id' })
+      .where({ group_name: groupName });
+    const members = await this.dbClient
+      .from('users')
+      .select({ userID: 'id', fullName: 'full_name', src: 'avatar_url' })
+      .whereIn('id', JSON.parse(names));
+    return Promise.resolve({ groupName, members, groupID });
+  }
 }
 
 module.exports = { DataStore };
