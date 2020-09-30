@@ -70,6 +70,37 @@ class DataStore {
       .whereIn('id', JSON.parse(names));
     return Promise.resolve({ groupName, members, groupID });
   }
+
+  async getFeedBacks(userID, type) {
+    const row = await this.dbClient
+      .from('feedbacks')
+      .select({
+        id: 'feed_back_id',
+        nameToShow: 'given_sender_name',
+        recipient: 'recipient',
+        relatedTo: 'topic',
+        sender: 'sender',
+        suggestion: 'suggestion',
+        time: 'send_time',
+      })
+      .where({ [type]: userID })
+      .then((rows) => Promise.resolve(rows));
+    return row;
+  }
+
+  async addFeedBack(feedBack) {
+    const { nameToShow, recipient, relatedTo, suggestion, sender } = feedBack;
+    const [colCount] = await this.dbClient('feedbacks').insert({
+      given_sender_name: nameToShow,
+      recipient: recipient,
+      topic: relatedTo,
+      sender: sender,
+      suggestion: suggestion,
+      send_time: new Date(),
+    });
+    console.log(colCount);
+    return colCount ? Promise.resolve({ added: true }) : Promise.reject();
+  }
 }
 
 module.exports = { DataStore };
