@@ -42,10 +42,6 @@ class Groups {
   }
 
   getMembersOf(groupID) {
-    // return new Promise((resolve) => {
-    //   const { members } = this.groups.find((group) => group.id === groupID);
-    //   resolve({ members });
-    // });
     return Promise.resolve({
       members: this.groups[0].members,
       groupName: groups[0].name,

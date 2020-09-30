@@ -20,6 +20,13 @@ const {
   DB_PATH,
 } = process.env;
 
+const knex = require('knex')({
+  client: 'sqlite3',
+  connection: {
+    filename: DB_PATH,
+  },
+});
+
 const {
   attachUserIfSignedIn,
   authorizeUser,
@@ -66,7 +73,7 @@ const dsClient = redis.createClient({
 app.locals.sessionHandler = new SessionHandler(dsClient);
 
 const dbClient = new Sqlite3.Database(DB_PATH || ':memory:');
-const dataStore = new DataStore(dbClient);
+const dataStore = new DataStore(knex);
 app.locals.dbClientReference = dbClient;
 app.locals.users = new Users(dataStore);
 app.locals.feedbacks = new FeedBacks(dataStore);

@@ -50,14 +50,14 @@ const createSessionAndRedirect = async function (res, dataStore, userID) {
 const redirectAuthenticated = async function (req, res, next) {
   const { users, sessionHandler } = req.app.locals;
   const { githubID } = req.body.gitUserInfo;
-  const account = await users.findAccount(githubID);
+  const userID = await users.findAccount(githubID);
 
-  if (!account) {
+  if (!userID) {
     next();
     return;
   }
 
-  createSessionAndRedirect(res, sessionHandler, account.userID);
+  createSessionAndRedirect(res, sessionHandler, userID);
 };
 
 const takeToSignUp = async function (req, res) {

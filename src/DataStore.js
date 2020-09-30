@@ -1,63 +1,54 @@
-const { findAccount, userInfo, userProfile } = require('./queries.json');
-
 class DataStore {
   constructor(dbClient) {
     this.dbClient = dbClient;
   }
 
-  findUserAccount(gitID) {
-    return new Promise((resolve) => {
-      this.dbClient.get(findAccount, [gitID], (err, row) => {
-        resolve(row);
-      });
-    });
+  async findUserAccount(gitID) {
+    const [userID] = await this.dbClient
+      .from('users')
+      .select({ userID: 'id' })
+      .where({ github_id: gitID })
+      .then((rows) => Promise.resolve(rows));
+    return userID;
   }
 
-  createUserAccount(accountInfo) {
+  async createUserAccount(accountInfo) {
     const { userName, githubID, avatarURL, fullName } = accountInfo;
-    const query = `
-    INSERT INTO users(id, github_id, avatar_url, full_name) 
-    VALUES (?,?,?,?);
-    `;
-
-    return new Promise((resolve, reject) => {
-      this.dbClient.run(
-        query,
-        [userName, githubID, avatarURL, fullName],
-        (err) => {
-          if (err) {
-            reject();
-          } else {
-            resolve();
-          }
-        }
-      );
+    const [colCount] = await this.dbClient('users').insert({
+      id: userName,
+      github_id: githubID,
+      avatar_url: avatarURL,
+      full_name: fullName,
     });
+
+    return colCount ? Promise.resolve() : Promise.reject();
   }
 
-  getUsersList() {
-    const query = 'SELECT id FROM users;';
-    return new Promise((resolve) => {
-      this.dbClient.all(query, (err, rows) => {
-        resolve(rows);
-      });
-    });
+  async getUsersList() {
+    const row = await this.dbClient
+      .from('users')
+      .select('id')
+      .then((rows) => Promise.resolve(rows));
+    console.log('getUsersList', row);
+    return row;
   }
 
-  getUserInfo(userID) {
-    return new Promise((resolve) => {
-      this.dbClient.get(userInfo, [userID], (err, row) => {
-        resolve(row);
-      });
-    });
+  async getUserInfo(userID) {
+    const [row] = await this.dbClient
+      .from('users')
+      .select('id', 'full_name', 'avatar_url')
+      .where({ id: userID })
+      .then((rows) => Promise.resolve(rows));
+    return row;
   }
 
-  getProfileData(userID) {
-    return new Promise((resolve) => {
-      this.dbClient.get(userProfile, [userID], (err, row) => {
-        resolve(row);
-      });
-    });
+  async getProfileData(userID) {
+    const [row] = await this.dbClient
+      .from('users')
+      .select({ userID: 'id', fullName: 'full_name', src: 'avatar_url' })
+      .where({ id: userID })
+      .then((rows) => Promise.resolve(rows));
+    return row;
   }
 }
 
