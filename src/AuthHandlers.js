@@ -14,7 +14,6 @@ const redirectToGithub = function (req, res) {
       path: '/login/oauth/authorize',
       queryParams: {
         client_id: gitClientID,
-        redirect_uri: 'http://localhost:3030/gitOauth/authCode',
       },
     })
   );
