@@ -31,10 +31,10 @@ class SessionHandler {
     });
   }
 
-  createSession({ userID }) {
+  createSession(userID) {
     return new Promise((resolve) => {
       this.incrID('expSesID').then((sesID) =>
-        this.dsClient.set(`expSes_${sesID}`, userID, 'EX', 2592000, () => {
+        this.dsClient.set(`expSes_${sesID}`, userID, (err, res) => {
           resolve(sesID);
         })
       );

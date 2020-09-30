@@ -14,14 +14,14 @@ class DataStore {
 
   async createUserAccount(accountInfo) {
     const { userName, githubID, avatarURL, fullName } = accountInfo;
-    const [colCount] = await this.dbClient('users').insert({
+    await this.dbClient('users').insert({
       id: userName,
       github_id: githubID,
       avatar_url: avatarURL,
       full_name: fullName,
     });
 
-    return colCount ? Promise.resolve() : Promise.reject();
+    return Promise.resolve();
   }
 
   async getUsersList() {
@@ -29,7 +29,6 @@ class DataStore {
       .from('users')
       .select('id')
       .then((rows) => Promise.resolve(rows));
-    console.log('getUsersList', row);
     return row;
   }
 
@@ -98,7 +97,6 @@ class DataStore {
       suggestion: suggestion,
       send_time: new Date(),
     });
-    console.log(colCount);
     return colCount ? Promise.resolve({ added: true }) : Promise.reject();
   }
 }

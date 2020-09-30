@@ -15,7 +15,6 @@ class Users {
 
   registerUser(userInfo) {
     const { fullName, userName } = userInfo;
-
     userInfo.fullName = fullName || 'Anonymous';
     return validateUserID(userName)
       ? this.db.createUserAccount(userInfo)

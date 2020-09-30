@@ -39,19 +39,13 @@ const authenticateUser = async function (req, res, next) {
 const createSessionAndRedirect = async function (res, dataStore, userID) {
   const sesID = await dataStore.createSession(userID);
   res.cookie('sesID', sesID);
-  res.redirect(
-    generateUrl({
-      url: 'http://localhost:3000',
-      path: '/',
-    })
-  );
+  res.redirect(generateUrl('/'));
 };
 
 const redirectAuthenticated = async function (req, res, next) {
   const { users, sessionHandler } = req.app.locals;
   const { githubID } = req.body.gitUserInfo;
   const userID = await users.findAccount(githubID);
-
   if (!userID) {
     next();
     return;
@@ -68,12 +62,7 @@ const takeToSignUp = async function (req, res) {
     avatarURL,
   });
   res.cookie('regT', registrationToken);
-  res.redirect(
-    generateUrl({
-      url: 'http://localhost:3000',
-      path: '/signUp',
-    })
-  );
+  res.redirect('/signUp');
 };
 
 const registerUser = async function (req, res, next) {

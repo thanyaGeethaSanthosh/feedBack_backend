@@ -4,12 +4,12 @@ const redis = require('redis');
 const Sqlite3 = require('sqlite3').verbose();
 const cookieParser = require('cookie-parser');
 const axios = require('axios');
-const { Authenticator } = require('./Authenticator');
-const { DataStore } = require('./DataStore');
-const { SessionHandler } = require('./SessionHandler');
-const { Users } = require('./Users');
-const { FeedBacks } = require('./FeedBacks');
-const { Groups } = require('./Groups');
+const { Authenticator } = require('./src/Authenticator');
+const { DataStore } = require('./src/DataStore');
+const { SessionHandler } = require('./src/SessionHandler');
+const { Users } = require('./src/Users');
+const { FeedBacks } = require('./src/FeedBacks');
+const { Groups } = require('./src/Groups');
 
 const {
   NO_LOG,
@@ -31,7 +31,7 @@ const {
   authorizeUser,
   closeSession,
   handleUnprocessableEntity,
-} = require('./generalHandlers');
+} = require('./src/generalHandlers');
 
 const {
   redirectToGithub,
@@ -40,7 +40,7 @@ const {
   takeToSignUp,
   registerUser,
   finishRegistration,
-} = require('./authHandlers');
+} = require('./src/authHandlers');
 
 const {
   serveHomepage,
@@ -51,7 +51,7 @@ const {
   getReceivedFeedBacks,
   getGroupMembers,
   getGroupsOf,
-} = require('./publicHandlers');
+} = require('./src/publicHandlers');
 
 const app = express();
 
@@ -82,7 +82,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
+app.use(express.static('build'));
 
 app.get('/api/authenticate', redirectToGithub);
 app.get(
@@ -94,16 +94,18 @@ app.get(
 
 app.post('/api/signUp', registerUser, finishRegistration);
 
-app.get('/', serveHomepage);
 app.get('/api/logout', closeSession);
 app.get('/api/getUserData', getUserData);
-app.use(attachUserIfSignedIn);
+app.use('/api/*', attachUserIfSignedIn);
 app.get('/api/user/:userName', getOtherUserData);
 app.post('/api/addFeedBack', addFeedBack);
 app.get('/api/getSentFeedBacks', getSentFeedBacks);
 app.get('/api/getReceivedFeedBacks', getReceivedFeedBacks);
 app.get('/api/getGroupMembers/:groupName', getGroupMembers);
 app.get('/api/getGroupsOf', getGroupsOf);
+app.get('/*', function (req, res) {
+  res.sendFile(`${__dirname}/build/index.html`);
+});
 
 app.use(authorizeUser);
 

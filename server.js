@@ -1,4 +1,4 @@
-const { app } = require('./src/routes');
+const { app } = require('./routes');
 const PORT = process.env.PORT || 3030;
 
 app.listen(PORT, () => {

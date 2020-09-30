@@ -4,7 +4,7 @@ const serveHomepage = function (req, res, next) {
     next();
     return;
   }
-  res.redirect('http://localhost:3000/');
+  res.redirect('/');
 };
 
 const getUserData = async function (req, res) {

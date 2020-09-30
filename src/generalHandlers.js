@@ -5,7 +5,6 @@ const attachUserIfSignedIn = async function (req, res, next) {
   req.user = { isSignedIn: false };
 
   const userID = await sessionHandler.getSession(req.cookies.sesID);
-
   if (userID) {
     req.user = await users.getUser(userID);
     req.user && (req.user.isSignedIn = true);
