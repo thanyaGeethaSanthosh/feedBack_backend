@@ -78,9 +78,7 @@ const takeToSignUp = async function (req, res) {
 
 const registerUser = async function (req, res, next) {
   const { users, sessionHandler } = req.app.locals;
-
   const registrationInfo = await sessionHandler.getTokenValue(req.cookies.regT);
-
   if (!registrationInfo) {
     res.sendStatus(statusCodes.unauthorized);
     return;

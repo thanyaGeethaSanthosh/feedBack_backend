@@ -17,14 +17,13 @@ const {
   GIT_CLIENT_SECRET,
   REDIS_URL,
   REDIS_DB,
-  DB_PATH,
+  DATABASE_URL,
 } = process.env;
 
 const knex = require('knex')({
-  client: 'sqlite3',
-  connection: {
-    filename: DB_PATH,
-  },
+  client: 'pg',
+  connection: DATABASE_URL,
+  migrations: { directory: `${__dirname}/migrations` },
 });
 
 const {
@@ -72,9 +71,8 @@ const dsClient = redis.createClient({
 
 app.locals.sessionHandler = new SessionHandler(dsClient);
 
-const dbClient = new Sqlite3.Database(DB_PATH || ':memory:');
 const dataStore = new DataStore(knex);
-app.locals.dbClientReference = dbClient;
+
 app.locals.users = new Users(dataStore);
 app.locals.feedbacks = new FeedBacks(dataStore);
 app.locals.groups = new Groups(dataStore);

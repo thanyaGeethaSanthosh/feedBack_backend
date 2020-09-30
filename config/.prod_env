@@ -1,4 +1,4 @@
 . tokens/.gitTokens
 
-export DB_PATH=data/feedback.db
 export REDIS_DB=0
+export DATABASE_URL=postgresql://localhost/feedback
