@@ -4,8 +4,8 @@
   "description": "backend for feedback app",
   "main": "index.js",
   "scripts": {
-    "dev": ". config/.prod_env; nodemon server.js",
-    "start": ". config/.prod_env; node server.js",
+    "dev": ". config/.prod_env; node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

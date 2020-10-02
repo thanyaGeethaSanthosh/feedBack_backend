@@ -1,12 +1,3 @@
-const statusCodes = require('./statusCodes.json');
-const serveHomepage = function (req, res, next) {
-  if (req.user && req.user.isSignedIn) {
-    next();
-    return;
-  }
-  res.redirect('/');
-};
-
 const getUserData = async function (req, res) {
   const { users, sessionHandler } = req.app.locals;
   const { sesID } = req.cookies;
@@ -104,7 +95,6 @@ const getGroupsOf = async function (req, res) {
 };
 
 module.exports = {
-  serveHomepage,
   getUserData,
   getOtherUserData,
   addFeedBack,

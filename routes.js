@@ -1,7 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
 const redis = require('redis');
-const Sqlite3 = require('sqlite3').verbose();
 const cookieParser = require('cookie-parser');
 const axios = require('axios');
 const { Authenticator } = require('./src/Authenticator');
@@ -17,14 +16,10 @@ const {
   GIT_CLIENT_SECRET,
   REDIS_URL,
   REDIS_DB,
-  DATABASE_URL,
 } = process.env;
 
-const knex = require('knex')({
-  client: 'pg',
-  connection: DATABASE_URL,
-  migrations: { directory: `${__dirname}/migrations` },
-});
+const config = require('./knexfile');
+const knex = require('knex')(config);
 
 const {
   attachUserIfSignedIn,
@@ -40,7 +35,7 @@ const {
   takeToSignUp,
   registerUser,
   finishRegistration,
-} = require('./src/authHandlers');
+} = require('./src/AuthHandlers');
 
 const {
   serveHomepage,
