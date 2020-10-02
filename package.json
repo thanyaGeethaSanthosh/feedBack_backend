@@ -4,6 +4,7 @@
   "description": "backend for feedback app",
   "main": "index.js",
   "scripts": {
+    "heroku-postbuild": "knex migrate:latest",
     "dev": ". config/.prod_env; node server.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
