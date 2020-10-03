@@ -50,6 +50,18 @@ class DataStore {
     return row;
   }
 
+  async addGroup(groupDetails) {
+    const { groupID, groupName, user } = groupDetails;
+    return await this.dbClient('groups')
+      .insert({
+        group_id: groupID,
+        group_name: groupName,
+        member_names: `[${user}]`,
+      })
+      .then(() => Promise.resolve({ added: true, groupID, groupName }))
+      .catch(() => Promise.reject());
+  }
+
   async getGroupsOf(userID) {
     const row = await this.dbClient
       .from('groups')
@@ -89,15 +101,17 @@ class DataStore {
 
   async addFeedBack(feedBack) {
     const { nameToShow, recipient, relatedTo, suggestion, sender } = feedBack;
-    const [colCount] = await this.dbClient('feedbacks').insert({
-      given_sender_name: nameToShow,
-      recipient: recipient,
-      topic: relatedTo,
-      sender: sender,
-      suggestion: suggestion,
-      send_time: new Date(),
-    });
-    return colCount ? Promise.resolve({ added: true }) : Promise.reject();
+    return await this.dbClient('feedbacks')
+      .insert({
+        given_sender_name: nameToShow,
+        recipient: recipient,
+        topic: relatedTo,
+        sender: sender,
+        suggestion: suggestion,
+        send_time: new Date(),
+      })
+      .then(() => Promise.resolve({ added: true }))
+      .catch(() => Promise.reject());
   }
 }
 

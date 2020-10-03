@@ -27,7 +27,7 @@ exports.up = function (knex) {
     });
 
     await trx.schema.createTable('groups', function (table) {
-      table.integer('group_id').notNullable().unique();
+      table.string('group_id', 30).notNullable().unique();
       table.string('group_name', 30).notNullable().primary();
       table.string('member_names', 30).notNullable().defaultTo('[]');
     });

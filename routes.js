@@ -46,6 +46,7 @@ const {
   getReceivedFeedBacks,
   getGroupMembers,
   getGroupsOf,
+  addGroup,
 } = require('./src/publicHandlers');
 
 const app = express();
@@ -96,6 +97,7 @@ app.get('/api/user/:userName', getOtherUserData);
 app.post('/api/addFeedBack', addFeedBack);
 app.get('/api/getSentFeedBacks', getSentFeedBacks);
 app.get('/api/getReceivedFeedBacks', getReceivedFeedBacks);
+app.get('/api/addGroup/:groupName', addGroup);
 app.get('/api/getGroupMembers/:groupName', getGroupMembers);
 app.get('/api/getGroupsOf', getGroupsOf);
 app.get('/*', function (req, res) {

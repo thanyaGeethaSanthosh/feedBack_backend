@@ -65,6 +65,20 @@ const getReceivedFeedBacks = async function (req, res) {
     });
 };
 
+const addGroup = async function (req, res) {
+  const { groups } = req.app.locals;
+  const { userID } = req.user;
+  const { groupName } = req.params;
+  groups
+    .addGroup(groupName, userID)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ added: false, error: 'some error in creating group' });
+    });
+};
+
 const getGroupMembers = async function (req, res) {
   const { groups } = req.app.locals;
   //have to remove self from group
@@ -102,4 +116,5 @@ module.exports = {
   getReceivedFeedBacks,
   getGroupMembers,
   getGroupsOf,
+  addGroup,
 };
