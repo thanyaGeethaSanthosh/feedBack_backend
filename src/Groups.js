@@ -20,6 +20,12 @@ class Groups {
     return this.db.addGroup({ groupName, user, groupID });
   }
 
+  joinGroup(groupID, user) {
+    return this.db
+      .joinGroup({ user, groupID })
+      .then((groupData) => Promise.resolve(groupData));
+  }
+
   getGroupsOf(userID) {
     return this.db
       .getGroupsOf(userID)

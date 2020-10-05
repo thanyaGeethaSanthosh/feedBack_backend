@@ -62,6 +62,18 @@ class DataStore {
       .catch(() => Promise.reject());
   }
 
+  async joinGroup({ groupID, user }) {
+    const groupDetails = await this.getGroupDetails(groupID);
+    if (!groupDetails.found || groupDetails.memberNames.includes(user)) {
+      return Promise.resolve(groupDetails);
+    }
+    const members = `${groupDetails.memberNames.join(',')},${user}`;
+    await this.dbClient('groups')
+      .update({ member_names: members })
+      .where('group_id', groupID);
+    return Promise.resolve({ groupName: groupDetails.groupName, groupID });
+  }
+
   async getGroupsOf(userID) {
     const row = await this.dbClient
       .from('groups')

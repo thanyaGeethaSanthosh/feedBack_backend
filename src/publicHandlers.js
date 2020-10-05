@@ -79,6 +79,20 @@ const addGroup = async function (req, res) {
     });
 };
 
+const joinGroup = async function (req, res) {
+  const { groups } = req.app.locals;
+  const { userID } = req.user;
+  const { groupID } = req.params;
+  groups
+    .joinGroup(groupID, userID)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch(() => {
+      res.json({ added: false, errorMsg: 'some error in joining group' });
+    });
+};
+
 const getGroupMembers = async function (req, res) {
   const { groups } = req.app.locals;
   const { groupID } = req.params;
@@ -115,4 +129,5 @@ module.exports = {
   getGroupMembers,
   getGroupsOf,
   addGroup,
+  joinGroup,
 };
