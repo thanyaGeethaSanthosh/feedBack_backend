@@ -99,7 +99,7 @@ app.post('/api/addFeedBack', addFeedBack);
 app.get('/api/getSentFeedBacks', getSentFeedBacks);
 app.get('/api/getReceivedFeedBacks', getReceivedFeedBacks);
 app.get('/api/createGroup/:groupName', addGroup);
-app.get('/api/getGroupMembers/:groupName', getGroupMembers);
+app.get('/api/getGroupMembers/:groupID', getGroupMembers);
 app.get('/api/getGroupsOf', getGroupsOf);
 app.get('/*', function (req, res) {
   res.sendFile(`${__dirname}/build/index.html`);

@@ -56,7 +56,7 @@ class DataStore {
       .insert({
         group_id: groupID,
         group_name: groupName,
-        member_names: `[${user}]`,
+        member_names: `${user}`,
       })
       .then(() => Promise.resolve({ added: true, groupID, groupName }))
       .catch(() => Promise.reject());
@@ -70,16 +70,41 @@ class DataStore {
     return row;
   }
 
-  async getMembersOf(groupName) {
-    const [{ names, groupID }] = await this.dbClient
+  async getGroupDetails(ID) {
+    const [row] = await this.dbClient
       .from('groups')
-      .select({ names: 'member_names', groupID: 'group_id' })
-      .where({ group_name: groupName });
+      .select({
+        names: 'member_names',
+        groupID: 'group_id',
+        groupName: 'group_name',
+      })
+      .where({ group_id: ID });
+    if (!row) {
+      return Promise.resolve({
+        found: false,
+        errorMsg: 'group does not exists',
+      });
+    }
+    const { names, groupID, groupName } = row;
+    return Promise.resolve({
+      found: true,
+      groupName,
+      memberNames: names.split(','),
+      groupID,
+    });
+  }
+
+  async getMembersOf(ID) {
+    const groupDetails = await this.getGroupDetails(ID);
+    if (!groupDetails.found) {
+      return Promise.resolve(groupDetails);
+    }
+    const { groupName, memberNames, groupID } = groupDetails;
     const members = await this.dbClient
       .from('users')
       .select({ userID: 'id', fullName: 'full_name', src: 'avatar_url' })
-      .whereIn('id', JSON.parse(names));
-    return Promise.resolve({ groupName, members, groupID });
+      .whereIn('id', memberNames);
+    return Promise.resolve({ members, groupName, groupID });
   }
 
   async getFeedBacks(userID, type) {

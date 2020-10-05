@@ -35,7 +35,7 @@ const addFeedBack = async function (req, res) {
       res.json(response);
     })
     .catch(() => {
-      res.json({ added: false, error: 'some error in adding feedBack' });
+      res.json({ added: false, errorMsg: 'some error in adding feedBack' });
     });
 };
 
@@ -48,7 +48,7 @@ const getSentFeedBacks = async function (req, res) {
       res.json(response);
     })
     .catch(() => {
-      res.json({ error: 'some error in getting feedBacks' });
+      res.json({ errorMsg: 'some error in getting feedBacks' });
     });
 };
 
@@ -61,7 +61,7 @@ const getReceivedFeedBacks = async function (req, res) {
       res.json(response);
     })
     .catch(() => {
-      res.json({ error: 'some error in getting feedBacks' });
+      res.json({ errorMsg: 'some error in getting feedBacks' });
     });
 };
 
@@ -75,21 +75,20 @@ const addGroup = async function (req, res) {
       res.json(response);
     })
     .catch(() => {
-      res.json({ added: false, error: 'some error in creating group' });
+      res.json({ added: false, errorMsg: 'some error in creating group' });
     });
 };
 
 const getGroupMembers = async function (req, res) {
   const { groups } = req.app.locals;
-  const { userID } = req.user;
-  const { groupName } = req.params;
+  const { groupID } = req.params;
   groups
-    .getMembersOf(groupName)
+    .getMembersOf(groupID)
     .then((response) => {
       res.json(response);
     })
     .catch(() => {
-      res.json({ error: 'some error in getting feedBacks' });
+      res.json({ errorMsg: 'some error in getting feedBacks' });
     });
 };
 
@@ -103,7 +102,7 @@ const getGroupsOf = async function (req, res) {
       res.json(response);
     })
     .catch(() => {
-      res.json({ error: 'some error in getting feedBacks' });
+      res.json({ errorMsg: 'some error in getting feedBacks' });
     });
 };
 

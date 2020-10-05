@@ -26,9 +26,10 @@ class Groups {
       .then((groupList) => Promise.resolve({ groupList }));
   }
 
-  async getMembersOf(groupID) {
-    const groupDetails = await this.db.getMembersOf(groupID);
-    return groupDetails;
+  getMembersOf(groupID) {
+    return this.db
+      .getMembersOf(groupID)
+      .then((groupData) => Promise.resolve(groupData));
   }
 }
 
