@@ -1,21 +1,10 @@
 const querystring = require('querystring');
 const statusCodes = require('./statusCodes.json');
 
-const generateUrl = function (urlObject) {
-  const { url, path, queryParams } = urlObject;
-  return `${url}${path}?${querystring.stringify(queryParams)}`;
-};
-
 const redirectToGithub = function (req, res) {
   const { gitClientID } = req.app.locals;
   res.redirect(
-    generateUrl({
-      url: 'https://github.com',
-      path: '/login/oauth/authorize',
-      queryParams: {
-        client_id: gitClientID,
-      },
-    })
+    `https://github.com/login/oauth/authorize?client_id=${gitClientID}`
   );
 };
 
@@ -35,33 +24,32 @@ const authenticateUser = async function (req, res, next) {
     });
 };
 
-const createSessionAndRedirect = async function (res, dataStore, userID) {
+const createSessionAndRedirect = async function (res, dataStore, userID, url) {
   const sesID = await dataStore.createSession(userID);
   res.cookie('sesID', sesID);
-  res.redirect(generateUrl('/'));
+  res.redirect(url);
 };
 
 const redirectAuthenticated = async function (req, res, next) {
-  const { users, sessionHandler } = req.app.locals;
+  const { users, sessionHandler, REACT_SERVER } = req.app.locals;
   const { githubID } = req.body.gitUserInfo;
   const userID = await users.findAccount(githubID);
   if (!userID) {
-    next();
-    return;
+    return next();
   }
 
-  createSessionAndRedirect(res, sessionHandler, userID);
+  createSessionAndRedirect(res, sessionHandler, userID, REACT_SERVER);
 };
 
 const takeToSignUp = async function (req, res) {
-  const { sessionHandler } = req.app.locals;
-  const { userID, userName, githubID, avatarURL } = req.body.gitUserInfo;
+  const { sessionHandler, REACT_SERVER } = req.app.locals;
+  const { githubID, avatarURL } = req.body.gitUserInfo;
   const registrationToken = await sessionHandler.createTempToken({
     githubID,
     avatarURL,
   });
   res.cookie('regT', registrationToken);
-  res.redirect('/signUp');
+  res.redirect(`${REACT_SERVER}/signUp`);
 };
 
 const registerUser = async function (req, res, next) {
@@ -83,11 +71,11 @@ const registerUser = async function (req, res, next) {
 };
 
 const finishRegistration = async function (req, res) {
-  const { sessionHandler } = req.app.locals;
+  const { sessionHandler, REACT_SERVER } = req.app.locals;
   const { userName } = req.body;
   await sessionHandler.deleteTempToken(req.cookies.regT);
   res.clearCookie('regT');
-  createSessionAndRedirect(res, sessionHandler, userName);
+  createSessionAndRedirect(res, sessionHandler, userName, REACT_SERVER);
 };
 
 module.exports = {

@@ -2,3 +2,4 @@
 
 export REDIS_DB=0
 export DATABASE_URL=postgresql://localhost/feedback
+export REACT_SERVER=http://localhost:3000

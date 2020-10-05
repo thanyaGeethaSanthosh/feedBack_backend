@@ -81,7 +81,6 @@ const addGroup = async function (req, res) {
 
 const getGroupMembers = async function (req, res) {
   const { groups } = req.app.locals;
-  //have to remove self from group
   const { userID } = req.user;
   const { groupName } = req.params;
   groups

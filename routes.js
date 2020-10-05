@@ -16,6 +16,7 @@ const {
   GIT_CLIENT_SECRET,
   REDIS_URL,
   REDIS_DB,
+  REACT_SERVER,
 } = process.env;
 
 const config = require('./knexfile');
@@ -38,7 +39,6 @@ const {
 } = require('./src/AuthHandlers');
 
 const {
-  serveHomepage,
   getUserData,
   getOtherUserData,
   addFeedBack,
@@ -52,6 +52,7 @@ const {
 const app = express();
 
 app.locals.noLog = NO_LOG;
+app.locals.REACT_SERVER = REACT_SERVER;
 app.locals.gitClientID = GIT_CLIENT_ID || 'myId123';
 
 app.locals.authenticator = new Authenticator(
@@ -97,7 +98,7 @@ app.get('/api/user/:userName', getOtherUserData);
 app.post('/api/addFeedBack', addFeedBack);
 app.get('/api/getSentFeedBacks', getSentFeedBacks);
 app.get('/api/getReceivedFeedBacks', getReceivedFeedBacks);
-app.get('/api/addGroup/:groupName', addGroup);
+app.get('/api/createGroup/:groupName', addGroup);
 app.get('/api/getGroupMembers/:groupName', getGroupMembers);
 app.get('/api/getGroupsOf', getGroupsOf);
 app.get('/*', function (req, res) {
