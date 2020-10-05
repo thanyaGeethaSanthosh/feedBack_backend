@@ -65,7 +65,7 @@ class DataStore {
   async getGroupsOf(userID) {
     const row = await this.dbClient
       .from('groups')
-      .select({ groupName: 'group_name' })
+      .select({ groupName: 'group_name', groupID: 'group_id' })
       .where('member_names', 'like', `%${userID}%`);
     return row;
   }
