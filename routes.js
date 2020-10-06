@@ -53,7 +53,7 @@ const {
 const app = express();
 
 app.locals.noLog = NO_LOG;
-app.locals.REACT_SERVER = REACT_SERVER;
+app.locals.REACT_SERVER = REACT_SERVER || '';
 app.locals.gitClientID = GIT_CLIENT_ID || 'myId123';
 
 app.locals.authenticator = new Authenticator(

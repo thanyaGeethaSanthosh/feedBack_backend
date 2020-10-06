@@ -49,7 +49,7 @@ const takeToSignUp = async function (req, res) {
     avatarURL,
   });
   res.cookie('regT', registrationToken);
-  res.redirect(`${REACT_SERVER}/signUp`);
+  res.redirect(`${REACT_SERVER}signUp`);
 };
 
 const registerUser = async function (req, res, next) {
